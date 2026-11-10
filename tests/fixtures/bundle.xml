@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bundle xmlns="http://hl7.org/fhir">
+  <type value="collection"/>
+  <entry>
+    <resource>
+      <OperationOutcome>
+        <extension url="http://hl7.org/fhir/StructureDefinition/operationoutcome-file">
+          <valueString value="input/examples/Condition-x.xml"/>
+        </extension>
+        <issue>
+          <extension url="http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-line">
+            <valueInteger value="10"/>
+          </extension>
+          <extension url="http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-col">
+            <valueInteger value="4"/>
+          </extension>
+          <extension url="http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id">
+            <valueCode value="XML_ERROR_ID"/>
+          </extension>
+          <severity value="error"/>
+          <code value="processing"/>
+          <details>
+            <text value="Condition subject reference cannot be resolved"/>
+          </details>
+          <expression value="Condition.subject"/>
+        </issue>
+        <issue>
+          <extension url="http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id">
+            <valueCode value="XML_WARNING_ID"/>
+          </extension>
+          <severity value="warning"/>
+          <code value="business-rule"/>
+          <details>
+            <text value="Condition clinicalStatus should be present"/>
+          </details>
+          <expression value="Condition.clinicalStatus"/>
+        </issue>
+        <issue>
+          <extension url="http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id">
+            <valueCode value="XML_INFO_ID"/>
+          </extension>
+          <severity value="information"/>
+          <code value="informational"/>
+          <details>
+            <text value="Condition informational hint from XML"/>
+          </details>
+          <expression value="Condition"/>
+        </issue>
+      </OperationOutcome>
+    </resource>
+  </entry>
+</Bundle>

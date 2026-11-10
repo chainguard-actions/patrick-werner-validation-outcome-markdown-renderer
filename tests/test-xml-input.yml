@@ -1,0 +1,32 @@
+name: Test XML input
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - id: action
+        uses: .
+        with:
+          bundle-file: tests/fixtures/bundle.xml
+          include: warnings
+          pr-summary-path: pr-summary-xml.md
+          filters: |
+            Condition-x.xml|XML_ERROR_ID||Condition.subject
+      - name: Assert PR summary content
+        run: |
+          f="$GITHUB_WORKSPACE/pr-summary-xml.md"
+          if [ ! -f "$f" ]; then echo "FAIL: $f not written"; exit 1; fi
+          cat "$f"
+          for s in '0 errors (1 filtered)' \
+                   '1 warnings (0 filtered)' \
+                   '1 hints filtered out' \
+                   'Condition-x.xml' 'XML_WARNING_ID' \
+                   'Condition clinicalStatus should be present'; do
+            grep -qF "$s" "$f" || { echo "FAIL: missing '$s'"; exit 1; }
+          done
+          for s in 'XML_ERROR_ID' 'XML_INFO_ID' 'Unused filters'; do
+            if grep -qF "$s" "$f"; then echo "FAIL: unexpected '$s'"; exit 1; fi
+          done
+          echo "PASS"

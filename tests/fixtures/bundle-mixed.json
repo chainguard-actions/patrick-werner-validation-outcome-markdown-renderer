@@ -1,0 +1,87 @@
+{
+  "resourceType": "Bundle",
+  "type": "collection",
+  "entry": [
+    {
+      "resource": {
+        "resourceType": "OperationOutcome",
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-file",
+            "valueString": "input/examples/Patient-a.json"
+          }
+        ],
+        "issue": [
+          {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueCode": "Validation_VAL_Profile_Minimum"
+              }
+            ],
+            "severity": "error",
+            "code": "structure",
+            "details": { "text": "Patient.name: minimum required = 1, but only found 0" },
+            "expression": ["Patient.name"]
+          },
+          {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueCode": "UNKNOWN_CODESYSTEM"
+              }
+            ],
+            "severity": "warning",
+            "code": "business-rule",
+            "details": { "text": "Unknown code system http://example.org/cs" },
+            "expression": ["Patient.identifier[0].system"]
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "OperationOutcome",
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-file",
+            "valueString": "input/examples/Observation-b.json"
+          }
+        ],
+        "issue": [
+          {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueCode": "TERMINOLOGY_TX_NOVALID"
+              }
+            ],
+            "severity": "error",
+            "code": "code-invalid",
+            "details": { "text": "The magic LOINC code 12345-6 is not valid" },
+            "expression": ["Observation.code"]
+          },
+          {
+            "extension": [
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-line",
+                "valueInteger": 5
+              },
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-col",
+                "valueInteger": 3
+              },
+              {
+                "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+                "valueCode": "BP_NARRATIVE"
+              }
+            ],
+            "severity": "information",
+            "code": "informational",
+            "details": { "text": "Best practice recommendation: add narrative" }
+          }
+        ]
+      }
+    }
+  ]
+}

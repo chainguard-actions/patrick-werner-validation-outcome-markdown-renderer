@@ -1,0 +1,33 @@
+name: Test filters skip known errors
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - id: action
+        uses: .
+        with:
+          bundle-file: tests/fixtures/bundle-mixed.json
+          include: errors
+          pr-summary-path: pr-summary-filters.md
+          filters: |
+            # known issues
+            |validation_val_profile_minimum||Patient.name
+            Observation-b.json||*magic LOINC code*|
+            NonExistent.json|NOPE_ID||
+      - name: Assert PR summary content
+        run: |
+          f="$GITHUB_WORKSPACE/pr-summary-filters.md"
+          if [ ! -f "$f" ]; then echo "FAIL: $f not written"; exit 1; fi
+          cat "$f"
+          for s in '0 errors (2 filtered)' \
+                   'Unused filters (not triggered)' \
+                   'NonExistent.json|NOPE_ID||'; do
+            grep -qF "$s" "$f" || { echo "FAIL: missing '$s'"; exit 1; }
+          done
+          for s in 'Patient-a.json' 'TERMINOLOGY_TX_NOVALID' 'known issues'; do
+            if grep -qF "$s" "$f"; then echo "FAIL: unexpected '$s'"; exit 1; fi
+          done
+          echo "PASS"

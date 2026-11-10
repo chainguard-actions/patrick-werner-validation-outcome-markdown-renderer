@@ -1,0 +1,35 @@
+{
+  "resourceType": "OperationOutcome",
+  "extension": [
+    {
+      "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-file",
+      "valueString": "input/examples/Encounter-c.json"
+    }
+  ],
+  "issue": [
+    {
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+          "valueCode": "DISPLAY_NAME_WRONG"
+        }
+      ],
+      "severity": "warning",
+      "code": "code-invalid",
+      "details": { "text": "Wrong display name for the code" },
+      "expression": ["Encounter.class"]
+    },
+    {
+      "extension": [
+        {
+          "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id",
+          "valueCode": "HINT_DOMAIN_RESOURCE"
+        }
+      ],
+      "severity": "information",
+      "code": "informational",
+      "details": { "text": "Consider adding a text narrative" },
+      "expression": ["Encounter"]
+    }
+  ]
+}

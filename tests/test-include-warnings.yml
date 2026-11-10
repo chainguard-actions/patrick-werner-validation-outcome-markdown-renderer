@@ -1,0 +1,30 @@
+name: Test include warnings excludes hints
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - id: action
+        uses: .
+        with:
+          bundle-file: tests/fixtures/no-errors.json
+          include: warnings
+          pr-summary-path: pr-summary-warnings.md
+      - name: Assert PR summary content
+        run: |
+          f="$GITHUB_WORKSPACE/pr-summary-warnings.md"
+          if [ ! -f "$f" ]; then echo "FAIL: $f not written"; exit 1; fi
+          cat "$f"
+          for s in 'FHIR Validation Results (filter: warnings)' \
+                   '0 errors (0 filtered)' \
+                   '1 warnings (0 filtered)' \
+                   '1 hints filtered out' \
+                   'DISPLAY_NAME_WRONG'; do
+            grep -qF "$s" "$f" || { echo "FAIL: missing '$s'"; exit 1; }
+          done
+          if grep -qF 'HINT_DOMAIN_RESOURCE' "$f"; then
+            echo "FAIL: information issue should not be listed"; exit 1
+          fi
+          echo "PASS"

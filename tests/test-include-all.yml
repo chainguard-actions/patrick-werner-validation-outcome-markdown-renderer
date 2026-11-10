@@ -1,0 +1,28 @@
+name: Test include all on single OperationOutcome without errors
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - id: action
+        uses: .
+        with:
+          bundle-file: tests/fixtures/no-errors.json
+          include: all
+          pr-summary-path: pr-summary-all.md
+      - name: Assert PR summary content
+        run: |
+          f="$GITHUB_WORKSPACE/pr-summary-all.md"
+          if [ ! -f "$f" ]; then echo "FAIL: $f not written"; exit 1; fi
+          cat "$f"
+          for s in 'FHIR Validation Results (filter: all)' \
+                   '0 errors (0 filtered)' \
+                   '1 warnings (0 filtered)' \
+                   '1 hints (0 filtered)' \
+                   'Encounter-c.json' 'DISPLAY_NAME_WRONG' 'HINT_DOMAIN_RESOURCE' \
+                   'Wrong display name for the code' 'Consider adding a text narrative'; do
+            grep -qF "$s" "$f" || { echo "FAIL: missing '$s'"; exit 1; }
+          done
+          echo "PASS"
