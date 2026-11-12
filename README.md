@@ -9,6 +9,7 @@ Hardened by [Chainguard](https://www.chainguard.dev) from the upstream action at
 | Version | Tag | Upstream commit | Hardening report |
 |---------|-----|-----------------|------------------|
 | v1.5.0 | [`v1.5.0`](https://github.com/chainguard-actions/patrick-werner-validation-outcome-markdown-renderer/tree/v1.5.0) | [`09f430c`](https://github.com/patrick-werner/validation-outcome-markdown-renderer/commit/09f430c50c24c4d8666158efa4922dd300de6b1b) | [`HARDENING.md`](https://github.com/chainguard-actions/patrick-werner-validation-outcome-markdown-renderer/blob/v1.5.0/HARDENING.md) |
+| v1.5.1 | [`v1.5.1`](https://github.com/chainguard-actions/patrick-werner-validation-outcome-markdown-renderer/tree/v1.5.1) | [`f670de2`](https://github.com/patrick-werner/validation-outcome-markdown-renderer/commit/f670de29644fe90e664d217af693a6bc18159fb5) | [`HARDENING.md`](https://github.com/chainguard-actions/patrick-werner-validation-outcome-markdown-renderer/blob/v1.5.1/HARDENING.md) |
 
 ## Privacy
 
