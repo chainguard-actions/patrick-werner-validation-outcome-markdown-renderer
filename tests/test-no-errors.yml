@@ -1,0 +1,25 @@
+name: Test clean bundle passes (include errors)
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - id: action
+        uses: .
+        with:
+          bundle-file: tests/fixtures/validation-clean.json
+          pr-summary-path: pr-summary-no-errors.md
+      - name: Assert summary file content
+        run: |
+          f="$GITHUB_WORKSPACE/pr-summary-no-errors.md"
+          if [ ! -f "$f" ]; then echo "FAIL: summary file missing"; exit 1; fi
+          cat "$f"
+          grep -q '<!-- fhir-validation-summary -->' "$f" || { echo "FAIL: marker missing"; exit 1; }
+          grep -q 'FHIR Validation Results (filter: errors)' "$f" || { echo "FAIL: heading missing"; exit 1; }
+          grep -q '0 errors (0 filtered)' "$f" || { echo "FAIL: error count missing"; exit 1; }
+          grep -q '1 warnings filtered out' "$f" || { echo "FAIL: warnings filtered-out count missing"; exit 1; }
+          grep -q '1 hints filtered out' "$f" || { echo "FAIL: hints filtered-out count missing"; exit 1; }
+          if grep -q 'UNKNOWN_CODESYSTEM' "$f"; then echo "FAIL: warning should not be in table"; exit 1; fi
+          echo "PASS"

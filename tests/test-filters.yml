@@ -1,0 +1,32 @@
+name: Test filters skip known errors
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - id: action
+        uses: .
+        with:
+          bundle-file: tests/fixtures/validation-errors.json
+          include: warnings
+          pr-summary-path: pr-summary-filters.md
+          filters: |
+            # known validator issue
+            Observation-Linksatrialer-Druck.json|VALIDATION_VAL_PROFILE_MINIMUM|*magic LOINC code*|Observation.code
+            |type_specific_checks_dt_identifier_system||
+            |NEVER_MATCHING_MSG_ID||
+      - name: Assert summary file content
+        run: |
+          f="$GITHUB_WORKSPACE/pr-summary-filters.md"
+          if [ ! -f "$f" ]; then echo "FAIL: summary file missing"; exit 1; fi
+          cat "$f"
+          grep -q 'FHIR Validation Results (filter: warnings)' "$f" || { echo "FAIL: heading"; exit 1; }
+          grep -q '0 errors (2 filtered)' "$f" || { echo "FAIL: error count"; exit 1; }
+          grep -q '1 warnings (0 filtered)' "$f" || { echo "FAIL: warning count"; exit 1; }
+          grep -q 'Unused filters' "$f" || { echo "FAIL: unused filters heading"; exit 1; }
+          grep -q 'NEVER_MATCHING_MSG_ID' "$f" || { echo "FAIL: unused filter not listed"; exit 1; }
+          grep -q 'UNKNOWN_CODESYSTEM' "$f" || { echo "FAIL: warning row missing"; exit 1; }
+          if grep -q 'Identifier system is invalid' "$f"; then echo "FAIL: filtered error still in table"; exit 1; fi
+          echo "PASS"

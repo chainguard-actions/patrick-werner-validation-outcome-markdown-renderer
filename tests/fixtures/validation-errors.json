@@ -1,0 +1,70 @@
+{
+  "resourceType": "Bundle",
+  "type": "collection",
+  "entry": [
+    {
+      "resource": {
+        "resourceType": "OperationOutcome",
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-file",
+            "valueString": "input/examples/Observation-Linksatrialer-Druck.json"
+          }
+        ],
+        "issue": [
+          {
+            "extension": [
+              { "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-line", "valueInteger": 10 },
+              { "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-col", "valueInteger": 4 },
+              { "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id", "valueCode": "VALIDATION_VAL_PROFILE_MINIMUM" }
+            ],
+            "severity": "error",
+            "code": "structure",
+            "details": { "text": "This is a magic LOINC code that must be present" },
+            "expression": ["Observation.code"]
+          },
+          {
+            "extension": [
+              { "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id", "valueCode": "UNKNOWN_CODESYSTEM" }
+            ],
+            "severity": "warning",
+            "code": "not-found",
+            "details": { "text": "CodeSystem is unknown" },
+            "expression": ["Observation.component"]
+          },
+          {
+            "extension": [
+              { "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id", "valueCode": "HINT_MSG_ID" }
+            ],
+            "severity": "information",
+            "code": "informational",
+            "details": { "text": "Just a helpful hint" },
+            "expression": ["Observation.status"]
+          }
+        ]
+      }
+    },
+    {
+      "resource": {
+        "resourceType": "OperationOutcome",
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-file",
+            "valueString": "input/examples/Patient-Example.json"
+          }
+        ],
+        "issue": [
+          {
+            "extension": [
+              { "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id", "valueCode": "TYPE_SPECIFIC_CHECKS_DT_IDENTIFIER_SYSTEM" }
+            ],
+            "severity": "error",
+            "code": "invalid",
+            "details": { "text": "Identifier system is invalid" },
+            "expression": ["Patient.identifier[0].system"]
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "resourceType": "Bundle",
+  "type": "collection",
+  "entry": [
+    {
+      "resource": {
+        "resourceType": "OperationOutcome",
+        "extension": [
+          {
+            "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-file",
+            "valueString": "input/examples/Observation-Clean.json"
+          }
+        ],
+        "issue": [
+          {
+            "extension": [
+              { "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id", "valueCode": "UNKNOWN_CODESYSTEM" }
+            ],
+            "severity": "warning",
+            "code": "not-found",
+            "details": { "text": "CodeSystem is unknown" },
+            "expression": ["Observation.component"]
+          },
+          {
+            "extension": [
+              { "url": "http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id", "valueCode": "HINT_MSG_ID" }
+            ],
+            "severity": "information",
+            "code": "informational",
+            "details": { "text": "Just a helpful hint" },
+            "expression": ["Observation.status"]
+          }
+        ]
+      }
+    }
+  ]
+}

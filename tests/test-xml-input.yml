@@ -1,0 +1,25 @@
+name: Test XML OperationOutcome input
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - id: action
+        uses: .
+        with:
+          bundle-file: tests/fixtures/qa.xml
+          include: all
+          pr-summary-path: pr-summary-xml.md
+      - name: Assert summary file content
+        run: |
+          f="$GITHUB_WORKSPACE/pr-summary-xml.md"
+          if [ ! -f "$f" ]; then echo "FAIL: summary file missing"; exit 1; fi
+          cat "$f"
+          grep -q 'FHIR Validation Results (filter: all)' "$f" || { echo "FAIL: heading"; exit 1; }
+          grep -q '1 warnings (0 filtered)' "$f" || { echo "FAIL: warning count"; exit 1; }
+          grep -q 'XML_WARNING_MSG_ID' "$f" || { echo "FAIL: message id missing"; exit 1; }
+          grep -q 'Questionnaire-Xml.xml' "$f" || { echo "FAIL: file name missing"; exit 1; }
+          grep -q 'Line 12, Column 7' "$f" || { echo "FAIL: line/col location missing"; exit 1; }
+          echo "PASS"

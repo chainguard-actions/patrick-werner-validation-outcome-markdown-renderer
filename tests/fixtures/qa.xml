@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OperationOutcome xmlns="http://hl7.org/fhir">
+  <extension url="http://hl7.org/fhir/StructureDefinition/operationoutcome-file">
+    <valueString value="input/examples/Questionnaire-Xml.xml"/>
+  </extension>
+  <issue>
+    <extension url="http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-line">
+      <valueInteger value="12"/>
+    </extension>
+    <extension url="http://hl7.org/fhir/StructureDefinition/operationoutcome-issue-col">
+      <valueInteger value="7"/>
+    </extension>
+    <extension url="http://hl7.org/fhir/StructureDefinition/operationoutcome-message-id">
+      <valueCode value="XML_WARNING_MSG_ID"/>
+    </extension>
+    <severity value="warning"/>
+    <code value="business-rule"/>
+    <details>
+      <text value="Xml based warning detail"/>
+    </details>
+  </issue>
+</OperationOutcome>

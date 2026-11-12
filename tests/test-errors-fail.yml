@@ -1,0 +1,31 @@
+name: Test errors cause failure
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - id: action
+        uses: .
+        continue-on-error: true
+        with:
+          bundle-file: tests/fixtures/validation-errors.json
+          include: errors
+          pr-summary-path: pr-summary-errors.md
+      - name: Assert failure and summary
+        env:
+          OUTCOME: ${{ steps.action.outcome }}
+        run: |
+          echo "outcome: $OUTCOME"
+          if [ "$OUTCOME" != "failure" ]; then echo "FAIL: expected failure"; exit 1; fi
+          f="$GITHUB_WORKSPACE/pr-summary-errors.md"
+          if [ ! -f "$f" ]; then echo "FAIL: summary file missing"; exit 1; fi
+          cat "$f"
+          grep -q '2 errors (0 filtered)' "$f" || { echo "FAIL: error count"; exit 1; }
+          grep -q 'VALIDATION_VAL_PROFILE_MINIMUM' "$f" || { echo "FAIL: msg id 1 missing"; exit 1; }
+          grep -q 'TYPE_SPECIFIC_CHECKS_DT_IDENTIFIER_SYSTEM' "$f" || { echo "FAIL: msg id 2 missing"; exit 1; }
+          grep -q 'Observation-Linksatrialer-Druck.json' "$f" || { echo "FAIL: basename missing"; exit 1; }
+          if grep -q 'input/examples/' "$f"; then echo "FAIL: full path should be basename"; exit 1; fi
+          if grep -q 'UNKNOWN_CODESYSTEM' "$f"; then echo "FAIL: warning should be excluded"; exit 1; fi
+          echo "PASS"

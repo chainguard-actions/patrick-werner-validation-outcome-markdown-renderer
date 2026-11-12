@@ -1,0 +1,37 @@
+name: "FHIR Validation Markdown Renderer"
+description: "Parses Java FHIR Validator OperationOutcome JSON or XML, annotates GitHub Checks, filters issues, and renders a summary table."
+inputs:
+  bundle-file:
+    description: "Path to the OperationOutcome file (JSON or XML; format is detected from the content)"
+    required: false
+    default: "validation.json"
+  include:
+    description: |
+      Which severities to output:
+      - errors: only issues with severity = error
+      - warnings: issues with severity = error or warning
+      - all: issues of any severity (error, warning, information)
+    required: false
+    default: "errors"
+  filters:
+    description: >
+      Line-separated list of filters in the form
+      `filename|messageId|detailsWildcard|location`.
+      - `filename` must match exactly.
+      - `messageId` must match exactly.
+      - `detailsWildcard` may use `*` as a wildcard.
+      - `location` must match exactly.
+      - If one part is empty, it will be ignored.
+    required: false
+  pr-summary-path:
+    description: "Path to write the PR summary markdown for PR comments"
+    required: false
+    default: "pr-summary.md"
+
+runs:
+  pre: chainguard-phonehome.js
+  using: "node24"
+  main: "dist/index.js"
+branding:
+  icon: "terminal"
+  color: "black"
